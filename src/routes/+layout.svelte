@@ -5,8 +5,6 @@
 		Header,
 		SideNav,
 		SideNavItems,
-		SideNavMenu,
-		SideNavMenuItem,
 		SideNavLink,
 		SideNavDivider,
 		SkipToContent,
@@ -17,12 +15,18 @@
 		HeaderPanelDivider,
 		Content
 	} from 'carbon-components-svelte';
-	import Fade from 'carbon-icons-svelte/lib/Fade.svelte';
-	import { SettingsAdjust } from 'carbon-icons-svelte';
+	import { Dashboard, DataTable, SettingsAdjust, Upload } from 'carbon-icons-svelte';
+	import { page } from '$app/stores';
 
 	let isSideNavOpen = false;
 	let isSettingsOpen = false;
 	let darkMode = 'g90';
+	let segment;
+
+	$: {
+		const split = $page.url.pathname.split('/');
+		segment = split && split.length > 1 ? split[1] : '';
+	}
 </script>
 
 <Header company="Eetmeter" platformName="Analyser" bind:isSideNavOpen>
@@ -56,16 +60,15 @@
 
 <SideNav bind:isOpen={isSideNavOpen} rail>
 	<SideNavItems>
-		<SideNavLink icon={Fade} text="Link 1" href="/" isSelected />
-		<SideNavLink icon={Fade} text="Link 2" href="/" />
-		<SideNavLink icon={Fade} text="Link 3" href="/" />
-		<SideNavMenu icon={Fade} text="Menu">
-			<SideNavMenuItem href="/" text="Link 1" />
-			<SideNavMenuItem href="/" text="Link 2" />
-			<SideNavMenuItem href="/" text="Link 3" />
-		</SideNavMenu>
+		<SideNavLink icon={Dashboard} text="Dashboard" href="/" isSelected={segment === ''} />
+		<SideNavLink
+			icon={DataTable}
+			text="Explore"
+			href="/explore"
+			isSelected={segment === 'explore'}
+		/>
 		<SideNavDivider />
-		<SideNavLink icon={Fade} text="Link 4" href="/" />
+		<SideNavLink icon={Upload} text="Import" href="/import" isSelected={segment === 'import'} />
 	</SideNavItems>
 </SideNav>
 
