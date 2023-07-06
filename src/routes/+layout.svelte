@@ -14,7 +14,10 @@
 		Theme,
 		HeaderAction,
 		HeaderPanelLinks,
-		HeaderPanelDivider
+		HeaderPanelDivider,
+		HeaderPanelLink,
+		Toggle,
+		ToggleSkeleton
 	} from 'carbon-components-svelte';
 	import Fade from 'carbon-icons-svelte/lib/Fade.svelte';
 	import { SettingsAdjust, Upload } from 'carbon-icons-svelte';
@@ -23,6 +26,7 @@
 
 	let isSideNavOpen = false;
 	let isSettingsOpen = false;
+	let darkMode = 'g90';
 </script>
 
 <Header company="Eetmeter" platformName="Analyser" bind:isSideNavOpen>
@@ -33,16 +37,22 @@
 		<HeaderAction bind:isOpen={isSettingsOpen} icon={SettingsAdjust}>
 			<HeaderPanelLinks>
 				<HeaderPanelDivider>Settings</HeaderPanelDivider>
-				<Theme
-					render="toggle"
-					toggle={{
-						themes: ['g10', 'g90'],
-						labelA: 'Enable dark mode',
-						labelB: 'Disable dark mode',
-						hideLabel: true,
-						size: 'sm'
-					}}
-				/>
+				<div class="ml-4 flex items-center">
+					<Theme
+						render="toggle"
+						toggle={{
+							themes: ['g10', 'g90'],
+							labelA: '',
+							labelB: '',
+							hideLabel: true
+						}}
+						bind:theme={darkMode}
+						persist
+					/>
+					<span class="w-full ml-4"
+						>{darkMode === 'g90' ? 'Disable dark mode' : 'Enable dark mode'}</span
+					>
+				</div>
 			</HeaderPanelLinks>
 		</HeaderAction>
 	</HeaderUtilities>
