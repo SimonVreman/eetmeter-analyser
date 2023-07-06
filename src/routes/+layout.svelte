@@ -15,14 +15,10 @@
 		HeaderAction,
 		HeaderPanelLinks,
 		HeaderPanelDivider,
-		HeaderPanelLink,
-		Toggle,
-		ToggleSkeleton
+		Content
 	} from 'carbon-components-svelte';
 	import Fade from 'carbon-icons-svelte/lib/Fade.svelte';
-	import { SettingsAdjust, Upload } from 'carbon-icons-svelte';
-	import { hasData } from '../stores/import-data';
-	import CallToAction from '../components/CallToAction.svelte';
+	import { SettingsAdjust } from 'carbon-icons-svelte';
 
 	let isSideNavOpen = false;
 	let isSettingsOpen = false;
@@ -73,8 +69,6 @@
 	</SideNavItems>
 </SideNav>
 
-{#if $hasData}
+<Content>
 	<slot />
-{:else}
-	<CallToAction icon={Upload} action="Import data" />
-{/if}
+</Content>
