@@ -1,7 +1,6 @@
 <script>
 	import '../app.css';
 	import 'carbon-components-svelte/css/all.css';
-	import { theme } from '../stores/theme';
 	import {
 		Header,
 		SideNav,
@@ -18,15 +17,12 @@
 		HeaderPanelDivider
 	} from 'carbon-components-svelte';
 	import Fade from 'carbon-icons-svelte/lib/Fade.svelte';
-	import { browser } from '$app/environment';
 	import { SettingsAdjust, Upload } from 'carbon-icons-svelte';
 	import { hasData } from '../stores/import-data';
 	import CallToAction from '../components/CallToAction.svelte';
 
 	let isSideNavOpen = false;
 	let isSettingsOpen = false;
-
-	$: browser && document.documentElement.setAttribute('theme', $theme);
 </script>
 
 <Header company="Eetmeter" platformName="Analyser" bind:isSideNavOpen>
