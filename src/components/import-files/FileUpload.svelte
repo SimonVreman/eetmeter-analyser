@@ -38,10 +38,14 @@
 	}
 
 	export let importedFiles;
-	$: importedFiles = fileHandlers.filter((f) => f.done && f.success).map((f) => f.data);
+	export let hasInvalid;
+	$: {
+		importedFiles = fileHandlers.filter((f) => f.done && f.success).map((f) => f.data);
+		hasInvalid = fileHandlers.some((f) => f.done && !f.success);
+	}
 </script>
 
-<Button as let:props>
+<Button as let:props kind="tertiary">
 	<label {...props}>
 		<input class="hidden" bind:files multiple type="file" accept="text/xml" />
 		Add files

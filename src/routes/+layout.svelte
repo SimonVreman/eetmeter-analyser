@@ -1,6 +1,6 @@
 <script>
-	import '../app.css';
 	import 'carbon-components-svelte/css/all.css';
+	import '../app.css';
 	import {
 		Header,
 		SideNav,
@@ -12,8 +12,7 @@
 		Theme,
 		HeaderAction,
 		HeaderPanelLinks,
-		HeaderPanelDivider,
-		Content
+		HeaderPanelDivider
 	} from 'carbon-components-svelte';
 	import { Dashboard, DataTable, SettingsAdjust, Upload } from 'carbon-icons-svelte';
 	import { page } from '$app/stores';
@@ -29,18 +28,7 @@
 	}
 </script>
 
-<Theme
-	render="toggle"
-	toggle={{
-		themes: ['g10', 'g90'],
-		labelA: '',
-		labelB: '',
-		hideLabel: true
-	}}
-	bind:theme={darkMode}
-	persist
-/>
-
+<Theme bind:theme={darkMode} persist />
 <Header company="Eetmeter" platformName="Analyser" bind:isSideNavOpen>
 	<svelte:fragment slot="skip-to-content">
 		<SkipToContent />
@@ -50,6 +38,16 @@
 			<HeaderPanelLinks>
 				<HeaderPanelDivider>Settings</HeaderPanelDivider>
 				<div class="ml-4 flex items-center">
+					<Theme
+						render="toggle"
+						toggle={{
+							themes: ['g10', 'g90'],
+							labelA: '',
+							labelB: '',
+							hideLabel: true
+						}}
+						bind:theme={darkMode}
+					/>
 					<span class="w-full ml-4"
 						>{darkMode === 'g90' ? 'Disable dark mode' : 'Enable dark mode'}</span
 					>
@@ -73,6 +71,4 @@
 	</SideNavItems>
 </SideNav>
 
-<Content>
-	<slot />
-</Content>
+<slot />
