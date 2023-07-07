@@ -19,7 +19,7 @@
 			rows={[
 				{
 					id: 'a',
-					key: 'Total consumptions',
+					metric: 'Total consumptions',
 					value: total_length
 				}
 			]}
