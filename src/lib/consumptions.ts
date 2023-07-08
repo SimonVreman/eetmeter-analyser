@@ -5,6 +5,7 @@ import { ProcessErrorType } from '../types/files';
 import dayjs from 'dayjs';
 import { db } from './db';
 import xml2js from 'xml2js';
+import { importConsumption } from './importer';
 
 export function summarize(data: EetmeterExport): EetmeterExportSummary {
 	return {
@@ -68,18 +69,9 @@ async function parseConsumptionXML(content: string, handler: FileHandler): Promi
 }
 
 export async function importConsumptions(files: EetmeterExport[]): Promise<[]> {
-	const promises = files.reduce((promises, file) => {
-		const consumptions = file.Consumpties.Consumptie.map(convertToDb);
-		promises.push(db.consumptions.bulkAdd(consumptions));
-		return promises;
-	}, []);
-	return Promise.all(promises);
-}
-
-function convertToDb(consumption: Consumption): DBConsumption {
-	const date = consumption.Datum[0];
-	return {
-		consumedAt: new Date(`${date.Jaar}-${date.Maand}-${date.Dag}`),
-		productCode: consumption.Product[0].$.VcCode
-	};
+	return Promise.all(
+		files.reduce((promises, file) => {
+			return [...promises, ...file.Consumpties.Consumptie.map(importConsumption)];
+		}, [])
+	);
 }

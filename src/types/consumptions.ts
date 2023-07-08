@@ -26,7 +26,7 @@ export interface Consumption {
 	$: ConsumptionAttributes;
 	Datum: Date[];
 	Product: Product[];
-	Nutrienten: { [key: string]: Nutrients[] }[];
+	Nutrienten: { [key: string]: Nutrient[] }[];
 }
 
 export interface ConsumptionAttributes {
@@ -46,7 +46,7 @@ export interface Date {
 	Jaar: string[];
 }
 
-export interface Nutrients {
+export interface Nutrient {
 	_: string;
 	$: NutrientsAttributes;
 }
@@ -61,7 +61,7 @@ export enum UnitEnum {
 	G = 'g',
 	Kcal = 'kcal',
 	Mg = 'mg',
-	Μg = 'µg'
+	Mig = 'µg'
 }
 
 export interface Product {
