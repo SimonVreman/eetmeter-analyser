@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { db } from '../../lib/db';
 	import ExploreTable from './ExploreTable.svelte';
+	import dayjs from 'dayjs';
 </script>
 
 <ExploreTable
@@ -14,4 +15,9 @@
 		{ key: 'productId', value: 'ProductId' },
 		{ key: 'grams', value: 'Amount (g)' }
 	]}
+	formatter={(item) => ({
+		...item,
+		date: dayjs(item.date).format('YYYY-MM-DD'),
+		period: item.period.toLowerCase()
+	})}
 />

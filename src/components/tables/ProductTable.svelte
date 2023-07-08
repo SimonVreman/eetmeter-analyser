@@ -13,4 +13,9 @@
 		{ key: 'brand', value: 'Brand' },
 		{ key: 'nevo', value: 'NEVO' }
 	]}
+	formatter={(item) => ({
+		...item,
+		nevo: item.nevo ? item.nevo : '',
+		brand: item.brand ? item.brand : ''
+	})}
 />

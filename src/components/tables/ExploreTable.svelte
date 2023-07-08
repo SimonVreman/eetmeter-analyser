@@ -17,6 +17,7 @@
 	export let headers: { key: string; value: string }[];
 	export let title: string;
 	export let description: string;
+	export let formatter: (item: never) => never = (item) => item;
 
 	let page = 1;
 	let pageSize = 20;
@@ -53,7 +54,7 @@
 			.offset(pageSize * (page - 1))
 			.limit(pageSize)
 			.toArray()
-			.then((r) => (rows = r))
+			.then((r) => (rows = r.map(formatter)))
 			.catch(showError)
 			.finally(() => (loading = false));
 	}
