@@ -71,5 +71,8 @@ export async function importConsumptions(files: EetmeterExport[]): Promise<[]> {
 		files.reduce((promises, file) => {
 			return [...promises, ...file.Consumpties.Consumptie.map(importConsumption)];
 		}, [])
-	);
+	).then((consumptions) => {
+		// Because we added them in parallel, we need to remove duplicate products.
+		return consumptions;
+	});
 }

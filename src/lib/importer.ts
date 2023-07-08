@@ -3,10 +3,9 @@ import type {
 	Consumption as DBConsumption,
 	ConsumptionNutrient as DBConsumptionNutrient,
 	ProductNutrient as DBProductNutrient,
-	ConsumptionPeriod as DBConsumptionPeriod,
 	Product as DBProduct
 } from '../types/schema';
-import { NutrientType } from '../types/schema';
+import { NutrientType, ConsumptionPeriod as DBConsumptionPeriod } from '../types/schema';
 import { Period } from '../types/consumptions';
 import { db } from './db';
 
@@ -20,13 +19,13 @@ export function importConsumption(consumption: Consumption): Promise<DBConsumpti
 				productId: product.id,
 				grams: +consumedUnit.Aantal[0] * +consumedUnit.$.GramPerEenheid
 			} as DBConsumption)
-			.then(async (consumption) => {
-				await Promise.all(
-					Object.getOwnPropertyNames(consumption.Nutrienten[0]).map((nutrient) =>
-						importConsumptionNutrient(consumption, nutrient[nutrient])
-					)
-				);
-				return consumption;
+			.then(async (persistedConsumption) => {
+				// await Promise.all(
+				// 	Object.getOwnPropertyNames(consumption.Nutrienten[0]).map((nutrient) =>
+				// 		importConsumptionNutrient(persistedConsumption, consumption.Nutrienten[0][nutrient][0])
+				// 	)
+				// );
+				return persistedConsumption;
 			});
 	});
 }
@@ -47,20 +46,6 @@ function importProduct(
 	nutrients: { [key: string]: Nutrient[] }
 ): Promise<DBProduct> {
 	return db.products
-		.filter((p) => p.guid === product.Guid[0])
-		.first()
-		.then((existing) => {
-			if (!existing) throw product;
-			return existing;
-		})
-		.catch((product: Product) => importNewProduct(product, nutrients));
-}
-
-function importNewProduct(
-	product: Product,
-	nutrients: { [key: string]: Nutrient[] }
-): Promise<DBProduct> {
-	return db.products
 		.add({
 			guid: product.Guid[0],
 			name: product.Naam[0],
@@ -70,10 +55,14 @@ function importNewProduct(
 		.then(async (product) => {
 			await Promise.all(
 				Object.getOwnPropertyNames(nutrients).map((nutrient) =>
-					importProductNutrient(product, nutrient[nutrient])
+					importProductNutrient(product, nutrients[nutrient][0])
 				)
 			);
 			return product;
+		})
+		.catch('ConstraintError', (_) => {
+			// Product already exists, return the existing product.
+			return db.products.where('guid').equals(product.Guid[0]).first();
 		});
 }
 

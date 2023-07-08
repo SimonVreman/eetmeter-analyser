@@ -70,15 +70,16 @@
 					subtitle: 'Your data was imported successfully.',
 					type: MessageType.SUCCESS
 				});
+				return goto('/');
 			})
-			.catch(() => {
+			.catch((e) => {
+				console.log(e);
 				notifications.send({
 					title: 'Import failed',
-					subtitle: 'Something went wrong while importing the files',
+					subtitle: 'Something went wrong while importing your files.',
 					type: MessageType.ERROR
 				});
 			})
-			.then(async () => await goto('/'))
 			.finally(() => {
 				isImporting = false;
 			});

@@ -9,6 +9,9 @@
 	description="All individual consumption items imported."
 	headers={[
 		{ key: 'id', value: 'ID' },
-		{ key: 'consumedAt', value: 'Consumed at' }
+		{ key: 'date', value: 'Date' },
+		{ key: 'period', value: 'Period' },
+		{ key: 'productId', value: 'ProductId' },
+		{ key: 'grams', value: 'Amount (g)' }
 	]}
 />

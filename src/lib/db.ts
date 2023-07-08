@@ -21,7 +21,7 @@ export class LocalDatabase extends Dexie {
 			nutrients: '++id, name, unit',
 			consumptions: '++id, date, period, productId, grams',
 			consumptionNutrients: '++id, nutrientId, type, amount',
-			products: '++id, guid, name, nevo, brand',
+			products: '++id, &guid, name, nevo, brand',
 			productNutrients: '++id, nutrientId, type, per100Gram'
 		});
 	}

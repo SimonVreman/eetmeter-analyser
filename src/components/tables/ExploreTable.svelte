@@ -1,9 +1,12 @@
 <script lang="ts">
 	import {
+		Button,
 		DataTable,
 		DataTableSkeleton,
+		Link,
 		Pagination,
-		PaginationSkeleton
+		PaginationSkeleton,
+		Tile
 	} from 'carbon-components-svelte';
 	import { notifications } from '../../stores/notifications';
 	import { MessageType } from '../../types/notifications';
@@ -58,8 +61,24 @@
 
 <div class="-mx-4">
 	{#if !loading && (rowCount || rowCount === 0) && rows}
-		<DataTable sortable {title} {description} {headers} {rows} bind:sortKey bind:sortDirection />
-		<Pagination bind:pageSize bind:page totalItems={rowCount} pageSizeInputDisabled />
+		{#if rows.length > 0}
+			<DataTable sortable {title} {description} {headers} {rows} bind:sortKey bind:sortDirection />
+			<Pagination bind:pageSize bind:page totalItems={rowCount} pageSizeInputDisabled />
+		{:else}
+			<Tile>
+				<div class="max-w-lg my-8">
+					<h2 class="text-2xl">Your imported data will appear here</h2>
+					<p class="mt-2 mb-8">
+						This is where you can browse your data, but you have not imported anything yet. To start
+						exploring, head to the import page and add your data, or go to demo mode.
+					</p>
+					<Button href="/import">Import data</Button>
+					<div class="mt-4">
+						<Link>Open demo mode</Link>
+					</div>
+				</div>
+			</Tile>
+		{/if}
 	{:else}
 		<DataTableSkeleton showToolbar={false} headers={headers.map((h) => h.value)} rows={pageSize} />
 		<PaginationSkeleton />

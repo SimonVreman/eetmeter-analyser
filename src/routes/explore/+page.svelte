@@ -2,6 +2,7 @@
 	import { Column, Content, Grid, Row, Tab, TabContent, Tabs } from 'carbon-components-svelte';
 	import ConsumptionTable from '../../components/tables/ConsumptionTable.svelte';
 	import NutrientsTable from '../../components/tables/NutrientsTable.svelte';
+	import ProductTable from '../../components/tables/ProductTable.svelte';
 </script>
 
 <Content class="flex">
@@ -15,7 +16,7 @@
 					<Tab label="Nutrients" />
 					<svelte:fragment slot="content">
 						<TabContent><ConsumptionTable /></TabContent>
-						<TabContent>products</TabContent>
+						<TabContent><ProductTable /></TabContent>
 						<TabContent><NutrientsTable /></TabContent>
 					</svelte:fragment>
 				</Tabs>
