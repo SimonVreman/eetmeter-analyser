@@ -18,6 +18,7 @@
 	export let title: string;
 	export let description: string;
 	export let formatter: (item: never) => never = (item) => item;
+	export let expandable = false;
 
 	let page = 1;
 	let pageSize = 20;
@@ -63,7 +64,20 @@
 <div class="-mx-4">
 	{#if !loading && (rowCount || rowCount === 0) && rows}
 		{#if rows.length > 0}
-			<DataTable sortable {title} {description} {headers} {rows} bind:sortKey bind:sortDirection />
+			<DataTable
+				sortable
+				{expandable}
+				{title}
+				{description}
+				{headers}
+				{rows}
+				bind:sortKey
+				bind:sortDirection
+			>
+				<svelte:fragment slot="expanded-row" let:row>
+					<slot {row} />
+				</svelte:fragment>
+			</DataTable>
 			<Pagination bind:pageSize bind:page totalItems={rowCount} pageSizeInputDisabled />
 		{:else}
 			<Tile>

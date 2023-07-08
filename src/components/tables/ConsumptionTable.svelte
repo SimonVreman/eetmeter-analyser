@@ -2,6 +2,7 @@
 	import { db } from '../../lib/db';
 	import ExploreTable from './ExploreTable.svelte';
 	import dayjs from 'dayjs';
+	import ConsumptionRow from './ConsumptionRow.svelte';
 </script>
 
 <ExploreTable
@@ -20,4 +21,8 @@
 		date: dayjs(item.date).format('YYYY-MM-DD'),
 		period: item.period.toLowerCase()
 	})}
-/>
+	expandable={true}
+	let:row
+>
+	<ConsumptionRow {row} />
+</ExploreTable>
