@@ -1,9 +1,9 @@
-import type { EetmeterExport, EetmeterExportSummary } from '../types/consumptions';
+import type { Consumption, EetmeterExport, EetmeterExportSummary } from '../types/consumptions';
 import type { ProcessError, FileHandler } from '../types/files';
 import { ProcessErrorType } from '../types/files';
 import dayjs from 'dayjs';
 import xml2js from 'xml2js';
-import { importConsumption } from './importer';
+import { importConsumption, importProduct } from './importer';
 
 export function summarize(data: EetmeterExport): EetmeterExportSummary {
 	return {
@@ -66,13 +66,13 @@ async function parseConsumptionXML(content: string, handler: FileHandler): Promi
 		});
 }
 
-export async function importConsumptions(files: EetmeterExport[]): Promise<[]> {
-	return Promise.all(
-		files.reduce((promises, file) => {
-			return [...promises, ...file.Consumpties.Consumptie.map(importConsumption)];
-		}, [])
-	).then((consumptions) => {
-		// Because we added them in parallel, we need to remove duplicate products.
-		return consumptions;
-	});
+export async function importConsumptions(files: EetmeterExport[]): Promise<Awaited<number>[]> {
+	// We insert all products first, this is quite fast. The consumptions take longer, so we batch them.
+	const consumptions: Consumption[] = files.flatMap((file) => file.Consumpties.Consumptie);
+	return Promise.all(consumptions.map((c) => importProduct(c.Product[0], c.Nutrienten[0]))).then(
+		(products) => {
+			const filteredProducts = products.filter((p) => p);
+			return Promise.all(consumptions.map((c) => importConsumption(c, filteredProducts)));
+		}
+	);
 }
