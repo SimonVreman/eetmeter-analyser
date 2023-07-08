@@ -47,9 +47,8 @@ export enum NutrientType {
 	SATURATED_FAT = 3,
 	CARBOHIDRATES = 4,
 	PROTEIN = 5,
-	FIBER = 5,
-	SALT = 6,
-	ALCOHOL = 7,
+	FIBER = 6,
+	SALT = 7,
 	WATER = 8,
 	SODIUM = 9,
 	POTASSIUM = 10,
@@ -71,5 +70,6 @@ export enum NutrientType {
 	IODINE = 26,
 	PHOSPHORUS = 27,
 	SUGARS = 28,
-	PLANT_PROTEIN = 29
+	PLANT_PROTEIN = 29,
+	ALCOHOL = 30
 }

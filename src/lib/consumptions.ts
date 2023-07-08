@@ -1,9 +1,7 @@
-import type { Consumption, EetmeterExport, EetmeterExportSummary } from '../types/consumptions';
+import type { EetmeterExport, EetmeterExportSummary } from '../types/consumptions';
 import type { ProcessError, FileHandler } from '../types/files';
-import type { Consumption as DBConsumption } from '../types/schema';
 import { ProcessErrorType } from '../types/files';
 import dayjs from 'dayjs';
-import { db } from './db';
 import xml2js from 'xml2js';
 import { importConsumption } from './importer';
 

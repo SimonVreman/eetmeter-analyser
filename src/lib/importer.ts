@@ -1,18 +1,13 @@
-import type {
-	Consumption,
-	Date as SplitDate,
-	Nutrient,
-	Period,
-	Product
-} from '../types/consumptions';
+import type { Consumption, Date as SplitDate, Nutrient, Product } from '../types/consumptions';
 import type {
 	Consumption as DBConsumption,
 	ConsumptionNutrient as DBConsumptionNutrient,
 	ProductNutrient as DBProductNutrient,
 	ConsumptionPeriod as DBConsumptionPeriod,
-	NutrientType,
 	Product as DBProduct
 } from '../types/schema';
+import { NutrientType } from '../types/schema';
+import { Period } from '../types/consumptions';
 import { db } from './db';
 
 export function importConsumption(consumption: Consumption): Promise<DBConsumption> {
@@ -69,7 +64,7 @@ function importNewProduct(
 		.add({
 			guid: product.Guid[0],
 			name: product.Naam[0],
-			nevo: +product.$.NEVO,
+			nevo: +product.$.NEVO === -1 ? undefined : +product.$.NEVO,
 			brand: product.Merk ? product.Merk[0] : undefined
 		})
 		.then(async (product) => {
