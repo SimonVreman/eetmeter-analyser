@@ -4,7 +4,7 @@
 	import dayjs from 'dayjs';
 </script>
 
-<div class="absolute bottom-0 right-0">
+<div class="fixed bottom-0 right-0">
 	{#each $notifications as notification}
 		<ToastNotification
 			kind={notification.type}
