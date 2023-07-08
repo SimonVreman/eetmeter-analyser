@@ -1,5 +1,12 @@
 <script lang="ts">
-	import { Button, ButtonSet, DataTable, InlineNotification } from 'carbon-components-svelte';
+	import {
+		Button,
+		ButtonSet,
+		DataTable,
+		DataTableSkeleton,
+		InlineNotification,
+		Loading
+	} from 'carbon-components-svelte';
 	import RightPanel from '../layout/RightPanel.svelte';
 	import type { FileHandler } from '../../types/files';
 	import type { EetmeterExportSummary } from '../../types/consumptions';
@@ -7,33 +14,30 @@
 	import { Dayjs } from 'dayjs';
 	import { notifications } from '../../stores/notifications';
 	import { MessageType } from '../../types/notifications';
+	import { goto } from '$app/navigation';
 
 	export let fileHandlers: FileHandler[] = [];
 
 	let files: EetmeterExportSummary[];
 	let totalLength: number;
 	let hasInvalid: boolean;
+	let hasLoading: boolean;
 	let isImporting = false;
 	let start: Dayjs;
 	let end: Dayjs;
 
 	$: {
-		let valid = true;
-		let length = 0;
-		let validFiles: EetmeterExportSummary[] = [];
-		fileHandlers.forEach((f) => {
-			if (!f.done) return;
-			if (!f.success || !f.data) {
-				valid = false;
-				return;
-			}
-			const summary = summarize(f.data);
-			validFiles.push(summary);
-			length += summary.consumptions;
-		});
-		totalLength = length;
-		hasInvalid = !valid;
-		files = validFiles.sort((a, b) => a.from - b.from);
+		files = fileHandlers
+			.reduce((list, f) => {
+				if (!f.done || !f.success || !f.data) return list;
+				const summary = summarize(f.data);
+				return [...list, summary];
+			}, [])
+			.sort((a, b) => a.from - b.from);
+		totalLength = files.reduce((sum, f) => sum + f.consumptions, 0);
+		hasInvalid = fileHandlers.some((f) => f.done === true && f.success !== true);
+		hasLoading = fileHandlers.some((f) => f.done !== true);
+
 		if (files.length) {
 			start = files[0].from;
 			end = files[files.length - 1].to;
@@ -46,6 +50,11 @@
 
 	function importFiles() {
 		isImporting = true;
+		notifications.send({
+			title: 'Starting import',
+			subtitle: 'We are processing your files, this should not take long.',
+			type: MessageType.INFO
+		});
 		importConsumptions(
 			fileHandlers.reduce((valid, f) => {
 				if (f.done && f.success && f.data) {
@@ -58,7 +67,7 @@
 				clearFiles();
 				notifications.send({
 					title: 'Import successful',
-					subtitle: 'Your data was imported successfully',
+					subtitle: 'Your data was imported successfully.',
 					type: MessageType.SUCCESS
 				});
 			})
@@ -69,6 +78,7 @@
 					type: MessageType.ERROR
 				});
 			})
+			.then(async () => await goto('/'))
 			.finally(() => {
 				isImporting = false;
 			});
@@ -78,6 +88,9 @@
 <RightPanel>
 	<span slot="header">Summary of import</span>
 	<div slot="content" class="h-full">
+		{#if isImporting}
+			<Loading />
+		{/if}
 		{#if files && files.length}
 			{#if hasInvalid}
 				<InlineNotification
@@ -86,23 +99,42 @@
 					subtitle="Some files could not be processed."
 				/>
 			{/if}
-			<DataTable
-				headers={[
-					{ key: 'metric', value: 'Metric' },
-					{ key: 'value', value: 'Value' }
-				]}
-				rows={[
-					{
-						id: 'a',
-						metric: 'Total consumptions',
-						value: totalLength
-					}
-				]}
-				class="mt-4"
-				slot="content"
-			/>
 			<div>
-				{start.format('D MMM YYYY')} to {end.format('D MMM YYYY')}
+				{#if hasLoading}
+					<DataTableSkeleton
+						class="mt-4"
+						showHeader={false}
+						showToolbar={false}
+						headers={[{ value: 'Metric' }, { value: 'Value' }]}
+						rows={3}
+					/>
+				{:else}
+					<DataTable
+						headers={[
+							{ key: 'metric', value: 'Metric' },
+							{ key: 'value', value: 'Value' }
+						]}
+						rows={[
+							{
+								id: 'a',
+								metric: 'Total consumptions',
+								value: totalLength
+							},
+							{
+								id: 'b',
+								metric: 'Oldest data',
+								value: start.format('DD MMM YYYY')
+							},
+							{
+								id: 'c',
+								metric: 'Newest data',
+								value: end.format('DD MMM YYYY')
+							}
+						]}
+						class="mt-4"
+						slot="content"
+					/>
+				{/if}
 			</div>
 		{:else}
 			<div class="flex flex-col justify-center h-full">
@@ -125,7 +157,7 @@
 			style="width: 50%; max-width: none"
 			size="lg"
 			on:click={importFiles}
-			disabled={!files || !files.length || hasInvalid || isImporting}>Import</Button
+			disabled={!files || !files.length || hasInvalid || hasLoading || isImporting}>Import</Button
 		>
 	</ButtonSet>
 </RightPanel>

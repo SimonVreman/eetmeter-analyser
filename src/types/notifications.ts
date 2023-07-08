@@ -2,7 +2,6 @@ export type Message = {
 	type: MessageType;
 	title: string;
 	subtitle: string;
-	caption?: string;
 };
 
 export enum MessageType {

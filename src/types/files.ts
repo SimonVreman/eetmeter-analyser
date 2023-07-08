@@ -10,7 +10,8 @@ export enum ProcessErrorType {
 	VALIDATOR = 'VALIDATOR'
 }
 
-export interface FileHandler {
+export interface FileHandler extends Promise<never> {
+	file: File;
 	name: string;
 	done: boolean;
 	success: boolean;

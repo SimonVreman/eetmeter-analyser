@@ -1,9 +1,10 @@
 import type { Consumption, EetmeterExport, EetmeterExportSummary } from '../types/consumptions';
-import type { ProcessError } from '../types/files';
+import type { ProcessError, FileHandler } from '../types/files';
 import type { Consumption as DBConsumption } from '../types/schema';
 import { ProcessErrorType } from '../types/files';
 import dayjs from 'dayjs';
 import { db } from './db';
+import xml2js from 'xml2js';
 
 export function summarize(data: EetmeterExport): EetmeterExportSummary {
 	return {
@@ -35,6 +36,35 @@ export function isEetmeterExport(data: any): data is EetmeterExport {
 		Array.isArray(data.Consumpties.Consumptie) &&
 		true
 	);
+}
+
+export function createFileHandler(file: File) {
+	const handler = file
+		.text()
+		.then((content) => parseConsumptionXML(content, handler))
+		.finally(() => (handler.done = true)) as FileHandler;
+	handler.file = file;
+	handler.name = file.name;
+	handler.done = false;
+	return handler;
+}
+
+async function parseConsumptionXML(content: string, handler: FileHandler): Promise<never> {
+	return xml2js
+		.parseStringPromise(content, {})
+		.then((r) => {
+			const { success, error } = validate(r);
+			handler.success = success;
+			handler.error = error;
+			if (success) handler.data = r;
+		})
+		.catch((e) => {
+			handler.success = false;
+			handler.error = {
+				type: ProcessErrorType.PARSER,
+				message: e.message
+			};
+		});
 }
 
 export async function importConsumptions(files: EetmeterExport[]): Promise<[]> {

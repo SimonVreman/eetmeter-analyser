@@ -11,7 +11,6 @@ function createNotificationStore() {
 		if ($_notifications.length > 0) {
 			const timer = setTimeout(() => {
 				_notifications.update((state) => {
-					console.log('clearing notifications');
 					state.shift();
 					return state;
 				});

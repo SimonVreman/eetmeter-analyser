@@ -1,43 +1,27 @@
 <script lang="ts">
 	import { Button, FileUploaderItem } from 'carbon-components-svelte';
-	import { browser } from '$app/environment';
-	import xml2js from 'xml2js';
 	import type { FileHandler } from '../../types/files';
 	import { ProcessErrorType } from '../../types/files.js';
-	import { validate } from '../../lib/consumptions';
+	import { createFileHandler } from '../../lib/consumptions';
+	import { isSameFile } from '../../lib/files';
 
 	let files: FileList | null = null;
+	let input: HTMLInputElement | null = null;
 	export let fileHandlers: FileHandler[] = [];
 
-	$: if (browser && files !== null) {
+	$: if (files !== null) {
 		for (const file of files) {
-			const handler: FileHandler = file.text().then((content) =>
-				xml2js
-					.parseStringPromise(content, {})
-					.then((r) => {
-						const { success, error } = validate(r);
-						handler.success = success;
-						handler.error = error;
-						if (success) handler.data = r;
-					})
-					.catch((e) => {
-						handler.success = false;
-						handler.error = {
-							type: ProcessErrorType.PARSER,
-							message: e.message
-						};
-					})
-					.finally(() => {
-						handler.done = true;
-						// Trigger reactivity
-						fileHandlers = fileHandlers;
-					})
-			);
-			handler.name = file.name;
-			handler.done = false;
+			// ignore duplicates
+			if (fileHandlers.some((f) => isSameFile(f.file, file))) continue;
+			const handler = createFileHandler(file);
+			handler.then(() => {
+				// Trigger reactivity
+				fileHandlers = fileHandlers;
+			});
 			fileHandlers.push(handler);
 		}
-		files = null;
+		// Clear input to allow reuploading the same file
+		if (input !== null) input.value = '';
 	}
 </script>
 
@@ -45,7 +29,7 @@
 <p class:bx--label-description={true}>Only .xml files are accepted</p>
 <Button as let:props kind="tertiary" class="mb-4">
 	<label {...props}>
-		<input class="hidden" bind:files multiple type="file" accept="text/xml" />
+		<input class="hidden" bind:files bind:this={input} multiple type="file" accept="text/xml" />
 		Add files
 	</label>
 </Button>
