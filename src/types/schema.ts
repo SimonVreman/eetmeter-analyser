@@ -2,7 +2,7 @@ export interface Consumption {
 	id?: number;
 	date: Date;
 	period: ConsumptionPeriod;
-	productId: string;
+	productId: number;
 	grams: number;
 }
 
@@ -15,13 +15,14 @@ export enum ConsumptionPeriod {
 
 export interface ConsumptionNutrient {
 	id?: number;
+	consumptionId: number;
 	nutrientId: number;
-	type: NutrientType;
 	amount: number;
 }
 
 export interface Product {
-	id?: string;
+	id?: number;
+	guid: string;
 	name: string;
 	nevo?: number;
 	brand?: string;
@@ -29,9 +30,8 @@ export interface Product {
 
 export interface ProductNutrient {
 	id?: number;
-	name: string;
+	productId: number;
 	nutrientId: number;
-	type: NutrientType;
 	per100Gram: number;
 }
 
