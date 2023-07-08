@@ -16,6 +16,7 @@
 	} from 'carbon-components-svelte';
 	import { Dashboard, DataTable, SettingsAdjust, Upload } from 'carbon-icons-svelte';
 	import { page } from '$app/stores';
+	import Notifications from '../components/notifications/Notifications.svelte';
 
 	let isSideNavOpen = false;
 	let isSettingsOpen = false;
@@ -72,3 +73,5 @@
 </SideNav>
 
 <slot />
+
+<Notifications />
