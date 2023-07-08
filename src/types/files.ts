@@ -1,3 +1,5 @@
+import type { EetmeterExport } from './consumptions';
+
 export interface ProcessError {
 	type: ProcessErrorType;
 	message: string;
@@ -13,5 +15,5 @@ export interface FileHandler {
 	done: boolean;
 	success: boolean;
 	error?: ProcessError;
-	data?: any;
+	data?: EetmeterExport;
 }

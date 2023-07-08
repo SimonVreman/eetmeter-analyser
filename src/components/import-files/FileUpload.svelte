@@ -4,9 +4,10 @@
 	import xml2js from 'xml2js';
 	import type { FileHandler } from '../../types/files';
 	import { ProcessErrorType } from '../../types/files.js';
+	import { validate } from '../../lib/consumptions';
 
 	let files: FileList | null = null;
-	let fileHandlers: FileHandler[] = [];
+	export let fileHandlers: FileHandler[] = [];
 
 	$: if (browser && files !== null) {
 		for (const file of files) {
@@ -14,8 +15,10 @@
 				xml2js
 					.parseStringPromise(content, {})
 					.then((r) => {
-						handler.success = true;
-						handler.data = r;
+						const { success, error } = validate(r);
+						handler.success = success;
+						handler.error = error;
+						if (success) handler.data = r;
 					})
 					.catch((e) => {
 						handler.success = false;
@@ -36,21 +39,17 @@
 		}
 		files = null;
 	}
-
-	export let importedFiles;
-	export let hasInvalid;
-	$: {
-		importedFiles = fileHandlers.filter((f) => f.done && f.success).map((f) => f.data);
-		hasInvalid = fileHandlers.some((f) => f.done && !f.success);
-	}
 </script>
 
-<Button as let:props kind="tertiary">
+<p class:bx--file--label={true}>Upload files</p>
+<p class:bx--label-description={true}>Only .xml files are accepted</p>
+<Button as let:props kind="tertiary" class="mb-4">
 	<label {...props}>
 		<input class="hidden" bind:files multiple type="file" accept="text/xml" />
 		Add files
 	</label>
 </Button>
+
 {#each fileHandlers as file}
 	<FileUploaderItem
 		invalid={file?.success === false}
@@ -58,11 +57,9 @@
 		errorSubject={file.error &&
 			(file.error.type === ProcessErrorType.PARSER ? 'Failed to parse' : 'Invalid data structure')}
 		errorBody={file.error && file.error.message}
-		status={file.done ? (file.success ? 'complete' : 'edit') : 'uploading'}
+		status={file.done ? 'edit' : 'uploading'}
 		on:delete={() => {
 			fileHandlers = fileHandlers.filter((f) => f !== file);
 		}}
 	/>
 {/each}
-
-<Button disabled={!fileHandlers.every((f) => f.done && f.success)}>Import</Button>
