@@ -1,17 +1,10 @@
 import Dexie, { type Table } from 'dexie';
-import type {
-	Consumption,
-	ConsumptionNutrient,
-	Nutrient,
-	Product,
-	ProductNutrient
-} from '../types/schema';
+import type { Consumption, Nutrient, Product, ProductNutrient } from '../types/schema';
 import { NutrientType } from '../types/schema';
 
 export class LocalDatabase extends Dexie {
 	nutrients: Table<Nutrient>;
 	consumptions!: Table<Consumption>;
-	consumptionNutrients!: Table<ConsumptionNutrient>;
 	products!: Table<Product>;
 	productNutrients!: Table<ProductNutrient>;
 
@@ -20,7 +13,6 @@ export class LocalDatabase extends Dexie {
 		this.version(1).stores({
 			nutrients: '++id, name, unit',
 			consumptions: '++id, date, period, productId, grams',
-			consumptionNutrients: '++id, nutrientId, type, amount',
 			products: '++id, &guid, name, nevo, brand',
 			productNutrients: '++id, nutrientId, type, per100Gram'
 		});

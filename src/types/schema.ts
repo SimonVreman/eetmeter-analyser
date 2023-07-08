@@ -13,13 +13,6 @@ export enum ConsumptionPeriod {
 	OTHER = 'OTHER'
 }
 
-export interface ConsumptionNutrient {
-	id?: number;
-	consumptionId: number;
-	nutrientId: number;
-	amount: number;
-}
-
 export interface Product {
 	id?: number;
 	guid: string;

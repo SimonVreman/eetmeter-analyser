@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { db } from '../../lib/db';
 	import ExploreTable from './ExploreTable.svelte';
+	import ProductRow from './ProductRow.svelte';
 </script>
 
 <ExploreTable
@@ -18,4 +19,8 @@
 		nevo: item.nevo ? item.nevo : '',
 		brand: item.brand ? item.brand : ''
 	})}
-/>
+	expandable={true}
+	let:row
+>
+	<ProductRow {row} />
+</ExploreTable>

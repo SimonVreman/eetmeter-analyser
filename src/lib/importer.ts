@@ -15,29 +15,12 @@ export function importConsumption(
 ): Promise<number> {
 	const consumedUnit = consumption.Product[0].Eenheid[0];
 	const productId = products.find((product) => product.guid === consumption.Product[0].Guid[0]).id;
-	return db.consumptions
-		.add({
-			date: parseDate(consumption.Datum[0]),
-			period: parseMoment(consumption.$.Periode),
-			grams: +consumedUnit.Aantal[0] * +consumedUnit.$.GramPerEenheid,
-			productId
-		} as DBConsumption)
-		.then(async (id) => {
-			await db.consumptionNutrients.bulkAdd(
-				Object.getOwnPropertyNames(consumption.Nutrienten[0]).map((nutrient) =>
-					parseConsumptionNutrient(id, consumption.Nutrienten[0][nutrient][0])
-				)
-			);
-			return id;
-		});
-}
-
-function parseConsumptionNutrient(consumption: number, nutrient: Nutrient): DBConsumptionNutrient {
-	return {
-		consumptionId: consumption,
-		nutrientId: parseNutrient(+nutrient.$.Code),
-		amount: +nutrient._
-	} as DBConsumptionNutrient;
+	return db.consumptions.add({
+		date: parseDate(consumption.Datum[0]),
+		period: parseMoment(consumption.$.Periode),
+		grams: +consumedUnit.Aantal[0] * +consumedUnit.$.GramPerEenheid,
+		productId
+	} as DBConsumption);
 }
 
 export function importProduct(
@@ -69,9 +52,9 @@ export function importProduct(
 
 function parseProductNutrient(product: number, nutrient: Nutrient): DBProductNutrient {
 	return {
-		consumptionId: product,
+		productId: product,
 		nutrientId: parseNutrient(+nutrient.$.Code),
-		amount: +nutrient._
+		per100Gram: +nutrient.$.WaardePer100Gram
 	} as DBProductNutrient;
 }
 
