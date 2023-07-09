@@ -1,23 +1,36 @@
 <script lang="ts">
 	import { db } from '../../lib/db';
-	import type { Consumption } from '../../types/schema';
-	import { Loading } from 'carbon-components-svelte';
+	import type { Consumption, Product } from '../../types/schema';
+	import { SkeletonText, Tile } from 'carbon-components-svelte';
+	import { productNutrients } from '../../lib/explore';
+	import NutrientSummary from './NutrientSummary.svelte';
 
 	export let row: Consumption;
 
-	let product;
+	let rows: { name: string; amount: number; unit: string }[];
+	let product: Product;
 
 	$: if (row) {
 		db.products.get(row.productId).then((res) => {
-			product = res;
+			if (res) product = res;
+		});
+	}
+
+	$: if (product && product.id) {
+		productNutrients(product.id).then((nutrients) => {
+			rows = nutrients.map((n) => ({
+				...n,
+				amount: (n.amount * row.grams) / 100
+			}));
 		});
 	}
 </script>
 
-<div>
-	{#if product}
-		<h1>{product.name}</h1>
+<div class="my-4">
+	{#if product && rows}
+		<p class="mb-4">{product.brand ? product.brand + ' - ' : ''}{product.name}</p>
 	{:else}
-		<Loading withOverlay={false} small />
+		<SkeletonText />
 	{/if}
+	<NutrientSummary {rows} />
 </div>

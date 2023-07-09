@@ -16,8 +16,8 @@
 	]}
 	formatter={(item) => ({
 		...item,
-		nevo: item.nevo ? item.nevo : '',
-		brand: item.brand ? item.brand : ''
+		nevo: item.nevo ? item.nevo : '-',
+		brand: item.brand ? item.brand : '-'
 	})}
 	expandable={true}
 	let:row

@@ -29,7 +29,6 @@
 	let sortDirection = 'ascending';
 
 	function showError(e) {
-		console.log(e);
 		notifications.send({
 			type: MessageType.ERROR,
 			title: 'Failed to load data',

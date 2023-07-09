@@ -1,27 +1,19 @@
 <script lang="ts">
-	import { db } from '../../lib/db';
 	import type { Product } from '../../types/schema';
-	import { Loading } from 'carbon-components-svelte';
+	import NutrientSummary from './NutrientSummary.svelte';
+	import { productNutrients } from '../../lib/explore';
 
 	export let row: Product;
 
-	let nutrients;
+	let rows: { name: string; amount: number; unit: string }[];
 
-	$: if (row) {
-		db.productNutrients
-			.where({ productId: row.id })
-			.toArray()
-			.then((res) => {
-				console.log(res);
-				nutrients = res;
-			});
+	$: if (row && row.id) {
+		productNutrients(row.id).then((nutrients) => {
+			rows = nutrients;
+		});
 	}
 </script>
 
-<div>
-	{#if nutrients}
-		{JSON.stringify(nutrients)}
-	{:else}
-		<Loading withOverlay={false} small />
-	{/if}
+<div class="my-4">
+	<NutrientSummary {rows} />
 </div>
