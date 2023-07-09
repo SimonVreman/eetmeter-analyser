@@ -73,7 +73,6 @@
 				return goto('/');
 			})
 			.catch((e) => {
-				console.log(e);
 				notifications.send({
 					title: 'Import failed',
 					subtitle: 'Something went wrong while importing your files.',

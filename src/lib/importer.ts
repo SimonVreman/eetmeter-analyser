@@ -72,7 +72,12 @@ function parseMoment(moment: Period): DBConsumptionPeriod {
 }
 
 function parseDate(date: SplitDate): Date {
-	return new Date(`${date.Jaar}-${date.Maand}-${date.Dag}`);
+	return new Date(
+		`${date.Jaar[0]}-${date.Maand[0].padStart(2, '0')}-${date.Dag[0].padStart(
+			2,
+			'0'
+		)}T00:00:00.000Z`
+	);
 }
 
 function parseNutrient(code: number): NutrientType {
