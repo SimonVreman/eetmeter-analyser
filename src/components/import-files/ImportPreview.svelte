@@ -15,6 +15,7 @@
 	import { notifications } from '../../stores/notifications';
 	import { MessageType } from '../../types/notifications';
 	import { goto } from '$app/navigation';
+	import { clearChartCache } from '../../stores/charts';
 
 	export let fileHandlers: FileHandler[] = [];
 
@@ -80,6 +81,7 @@
 				});
 			})
 			.finally(() => {
+				clearChartCache();
 				isImporting = false;
 			});
 	}

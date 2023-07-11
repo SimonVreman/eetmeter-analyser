@@ -19,6 +19,7 @@
 	import { Dashboard, DataTable, SettingsAdjust, Upload } from 'carbon-icons-svelte';
 	import { page } from '$app/stores';
 	import Notifications from '../components/notifications/Notifications.svelte';
+	import { theme } from '../stores/theme';
 
 	let isSideNavOpen = false;
 	let isSettingsOpen = false;
@@ -29,6 +30,8 @@
 		const split = $page.url.pathname.split('/');
 		segment = split && split.length > 1 ? split[1] : '';
 	}
+
+	$: $theme = darkMode;
 </script>
 
 <Theme bind:theme={darkMode} persist />

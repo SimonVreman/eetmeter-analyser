@@ -1,8 +1,10 @@
 <script lang="ts">
-	import { Content } from 'carbon-components-svelte';
+	import { Content, Tile } from 'carbon-components-svelte';
 	import CaloricHistory from '../components/charts/CaloricHistory.svelte';
 </script>
 
 <Content>
-	<CaloricHistory />
+	<Tile>
+		<CaloricHistory />
+	</Tile>
 </Content>

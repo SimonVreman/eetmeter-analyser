@@ -1,45 +1,42 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
-import { db } from '../lib/db';
-import { NutrientType } from '../types/schema';
-import { average, fillEmptyDays } from '../lib/charts';
+import { getCaloricHistory, getFullDomain } from '../lib/chart-data';
+import type { CachedChartDate } from '../types/charts';
 
-function createCaloricHistoryStore() {
-	if (!browser) return writable([]);
-	const stored = localStorage.getItem('cache:charts:caloricHistory');
-	const _caloricHistory = writable(stored ? JSON.parse(stored) : []);
+function cachedStore(key: string, dataLoader: () => Promise<never>): CachedChartDate {
+	if (!browser)
+		return {
+			subscribe: writable([]).subscribe,
+			reload: () => {
+				return;
+			}
+		};
 
-	if (stored) return _caloricHistory;
+	const stored = localStorage.getItem('cache:charts:' + key);
+	const _store = writable(stored ? JSON.parse(stored) : []);
 
-	const productHistory: Map<number, { product: number; grams: number }[]> = new Map();
-	const caloricHistory: { group: string; date: Date; value: number }[] = [];
-	db.consumptions
-		.orderBy('date')
-		.each((c) => {
-			const point = { product: c.productId, grams: c.grams };
-			const key = c.date.getTime();
-			productHistory.has(key)
-				? productHistory.get(key).push(point)
-				: productHistory.set(key, [point]);
-		})
-		.then(() => db.productNutrients.where('nutrientId').equals(NutrientType.ENERGY).toArray())
-		.then((productEnergy) => {
-			productHistory.forEach((points, date) => {
-				const value = points.reduce((sum, p) => {
-					const energy = productEnergy.find((e) => e.productId === p.product);
-					return sum + (energy ? (p.grams * energy.per100Gram) / 100 : 0);
-				}, 0);
-				caloricHistory.push({ group: 'caloric history', date: new Date(date), value });
-			});
-			return caloricHistory;
-		})
-		.then(fillEmptyDays)
-		.then((history) => {
-			_caloricHistory.set(history);
-			localStorage.setItem('cache:charts:caloricHistory', JSON.stringify(history));
+	const loader = () =>
+		dataLoader().then((result) => {
+			_store.set(result);
+			localStorage.setItem('cache:charts:' + key, JSON.stringify(result));
 		});
 
-	return _caloricHistory;
+	if (!stored) loader();
+
+	return {
+		subscribe: _store.subscribe,
+		reload: loader
+	};
 }
 
-export const caloricHistory = createCaloricHistoryStore();
+export const caloricHistory = cachedStore('caloric-history', getCaloricHistory);
+export const domain = cachedStore('domain', getFullDomain);
+
+const cached: CachedChartDate[] = [caloricHistory, domain];
+
+export function clearChartCache() {
+	const toRemove: string[] = [];
+	for (const key in localStorage) if (key.startsWith('cache:charts')) toRemove.push(key);
+	toRemove.forEach((key) => localStorage.removeItem(key));
+	cached.forEach((s) => s.reload());
+}

@@ -1,10 +1,12 @@
 <script lang="ts">
-	import { caloricHistory } from '../../stores/charts.js';
-	import { AreaChart } from '@carbon/charts-svelte';
+	import { caloricHistory, domain } from '../../stores/charts.js';
+	import { ComboChart } from '@carbon/charts-svelte';
+	import { ChartTypes } from '@carbon/charts';
+	import { theme } from '../../stores/theme';
 
 	const options = {
 		height: '400px',
-		curve: 'curveNatural',
+		curve: 'curveMonotoneX',
 		bounds: {
 			upperBoundMapsTo: 'max',
 			lowerBoundMapsTo: 'min'
@@ -17,11 +19,28 @@
 			},
 			bottom: {
 				mapsTo: 'date',
-				scaleType: 'time'
+				scaleType: 'time',
+				domain: $domain
 			}
 		},
-		legend: { enabled: false }
+		legend: { enabled: false },
+		comboChartTypes: [
+			{ type: ChartTypes.AREA, correspondingDatasets: ['caloric history (corrected average)'] },
+			{ type: ChartTypes.SCATTER, correspondingDatasets: ['caloric history'] }
+		],
+		timeScale: { addSpaceOnEdges: 0 },
+		data: {
+			loading: true
+		},
+		theme: $theme,
+		title: 'Caloric intake history'
 	};
+
+	$: {
+		options.theme = $theme;
+		options.data.loading = !$caloricHistory.length;
+		options.axes.bottom.domain = $domain;
+	}
 </script>
 
-<AreaChart data={$caloricHistory ?? []} {options} />
+<ComboChart data={$caloricHistory ?? []} {options} />
