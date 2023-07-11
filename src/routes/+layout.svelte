@@ -1,5 +1,7 @@
 <script>
 	import 'carbon-components-svelte/css/all.css';
+	import '@carbon/styles/css/styles.css';
+	import '@carbon/charts-svelte/styles.css';
 	import '../app.css';
 	import {
 		Header,
