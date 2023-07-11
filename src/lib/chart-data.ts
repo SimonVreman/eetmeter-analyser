@@ -36,7 +36,7 @@ export async function getFullDomain(): Promise<number[]> {
 		db.consumptions
 			.orderBy('date')
 			.first()
-			.then((c) => c?.date.getTime() ?? dayjs().subtract(1, 'day').get('second')),
+			.then((c) => c?.date.getTime() ?? dayjs().subtract(1, 'day').valueOf()),
 		db.consumptions
 			.orderBy('date')
 			.last()

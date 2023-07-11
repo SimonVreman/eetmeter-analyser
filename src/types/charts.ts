@@ -8,11 +8,12 @@ export interface DataPoint {
 	max?: number;
 }
 
-export interface CachedChartDate {
+export interface CachedChartData {
 	subscribe: (
 		this: void,
 		run: Subscriber<unknown>,
 		invalidate?: Invalidator<unknown>
 	) => Unsubscriber;
+	set: (v: unknown) => void;
 	reload: () => void;
 }

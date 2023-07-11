@@ -8,3 +8,8 @@
 div[role=table] {
   margin: 0;
 }
+
+/* Fix for the date picker, it uses the old variable... */
+:root {
+  --cds-layer-01: var(--cds-ui-01);
+}

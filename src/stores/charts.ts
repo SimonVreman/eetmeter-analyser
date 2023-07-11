@@ -1,38 +1,46 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 import { getCaloricHistory, getFullDomain } from '../lib/chart-data';
-import type { CachedChartDate } from '../types/charts';
+import type { CachedChartData, DataPoint } from '../types/charts';
 
-function cachedStore(key: string, dataLoader: () => Promise<never>): CachedChartDate {
-	if (!browser)
+function cachedStore<T>(key: string, dataLoader: () => Promise<T>): CachedChartData {
+	if (!browser) {
+		const w = writable([]);
 		return {
-			subscribe: writable([]).subscribe,
+			subscribe: w.subscribe,
+			set: w.set,
 			reload: () => {
 				return;
 			}
 		};
+	}
 
-	const stored = localStorage.getItem('cache:charts:' + key);
+	const cacheKey = `cache:chart:${key}`;
+	const stored = localStorage.getItem(cacheKey);
 	const _store = writable(stored ? JSON.parse(stored) : []);
 
 	const loader = () =>
 		dataLoader().then((result) => {
 			_store.set(result);
-			localStorage.setItem('cache:charts:' + key, JSON.stringify(result));
+			localStorage.setItem(cacheKey, JSON.stringify(result));
 		});
 
 	if (!stored) loader();
 
 	return {
 		subscribe: _store.subscribe,
+		set: (v) => {
+			localStorage.setItem(cacheKey, JSON.stringify(v));
+			return _store.set(v);
+		},
 		reload: loader
 	};
 }
 
-export const caloricHistory = cachedStore('caloric-history', getCaloricHistory);
-export const domain = cachedStore('domain', getFullDomain);
+export const caloricHistory = cachedStore<DataPoint[]>('caloric-history', getCaloricHistory);
+export const domain = cachedStore<number[]>('domain', getFullDomain);
 
-const cached: CachedChartDate[] = [caloricHistory, domain];
+const cached: CachedChartData[] = [caloricHistory, domain];
 
 export function clearChartCache() {
 	const toRemove: string[] = [];
