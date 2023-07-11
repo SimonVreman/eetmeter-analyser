@@ -26,7 +26,7 @@ db.on('populate', () =>
 		{ id: NutrientType.ENERGY, name: 'Energy', unit: 'kcal' },
 		{ id: NutrientType.FAT, name: 'Fat', unit: 'g' },
 		{ id: NutrientType.SATURATED_FAT, name: 'Saturated fat', unit: 'g' },
-		{ id: NutrientType.CARBOHIDRATES, name: 'Carbohydrates', unit: 'g' },
+		{ id: NutrientType.CARBOHYDRATES, name: 'Carbohydrates', unit: 'g' },
 		{ id: NutrientType.PROTEIN, name: 'Protein', unit: 'g' },
 		{ id: NutrientType.FIBER, name: 'Fiber', unit: 'g' },
 		{ id: NutrientType.SALT, name: 'Salt', unit: 'g' },

@@ -1,6 +1,6 @@
-import { writable } from 'svelte/store';
+import { derived, writable } from 'svelte/store';
 import { browser } from '$app/environment';
-import { getCaloricHistory, getFullDomain } from '../lib/chart-data';
+import { getTotalMacros, getCaloricHistory, getFullDomain } from '../lib/chart-data';
 import type { CachedChartData, DataPoint } from '../types/charts';
 
 function cachedStore<T>(key: string, dataLoader: () => Promise<T>): CachedChartData {
@@ -39,6 +39,12 @@ function cachedStore<T>(key: string, dataLoader: () => Promise<T>): CachedChartD
 
 export const caloricHistory = cachedStore<DataPoint[]>('caloric-history', getCaloricHistory);
 export const domain = cachedStore<number[]>('domain', getFullDomain);
+export const totalMacros = derived(domain, (domain, set) => {
+	set([]);
+	if (!browser) return;
+	const [start, end]: [number, number] = domain;
+	getTotalMacros(new Date(start), new Date(end)).then(set);
+});
 
 const cached: CachedChartData[] = [caloricHistory, domain];
 

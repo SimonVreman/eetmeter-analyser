@@ -2,6 +2,7 @@
 	import { Content, Tile } from 'carbon-components-svelte';
 	import CaloricHistory from '../components/charts/CaloricHistory.svelte';
 	import Domain from '../components/charts/Domain.svelte';
+	import TotalMacros from '../components/charts/TotalMacros.svelte';
 </script>
 
 <Content>
@@ -12,4 +13,9 @@
 	<Tile>
 		<CaloricHistory />
 	</Tile>
+	<div class="mt-4">
+		<Tile>
+			<TotalMacros />
+		</Tile>
+	</div>
 </Content>

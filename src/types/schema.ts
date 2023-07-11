@@ -38,7 +38,7 @@ export enum NutrientType {
 	ENERGY = 1,
 	FAT = 2,
 	SATURATED_FAT = 3,
-	CARBOHIDRATES = 4,
+	CARBOHYDRATES = 4,
 	PROTEIN = 5,
 	FIBER = 6,
 	SALT = 7,

@@ -33,7 +33,7 @@
 			loading: true
 		},
 		theme: $theme,
-		title: 'Caloric intake history'
+		title: 'Caloric intake history (kcal)'
 	};
 
 	$: {
@@ -43,4 +43,6 @@
 	}
 </script>
 
-<ComboChart data={$caloricHistory ?? []} {options} />
+<div style="height: 400px">
+	<ComboChart data={$caloricHistory} {options} />
+</div>

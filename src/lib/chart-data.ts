@@ -43,3 +43,39 @@ export async function getFullDomain(): Promise<number[]> {
 			.then((c) => c?.date.getTime() ?? new Date().getTime())
 	]);
 }
+
+export async function getTotalMacros(start: Date, end: Date): Promise<DataPoint[]> {
+	const productHistory: { product: number; grams: number }[] = [];
+	const counts = {
+		[NutrientType.PROTEIN]: 0,
+		[NutrientType.FAT]: 0,
+		[NutrientType.CARBOHYDRATES]: 0
+	};
+	return db.consumptions
+		.where('date')
+		.between(start, end)
+		.each((c) => {
+			productHistory.push({ product: c.productId, grams: c.grams });
+		})
+		.then(() =>
+			db.productNutrients
+				.where('nutrientId')
+				.anyOf([NutrientType.FAT, NutrientType.CARBOHYDRATES, NutrientType.PROTEIN])
+				.toArray()
+		)
+		.then((productNutrients) => {
+			productHistory.forEach((p) => {
+				const nutrients = productNutrients.filter((e) => e.productId === p.product);
+				nutrients.forEach((n) => {
+					counts[n.nutrientId] +=
+						((p.grams * n.per100Gram) / 100) * (n.nutrientId === NutrientType.FAT ? 9 : 4);
+				});
+			});
+			return db.nutrients.toArray().then((nutrients) => {
+				return Object.keys(counts).map((id) => ({
+					group: nutrients[id].name,
+					value: counts[id]
+				}));
+			});
+		});
+}

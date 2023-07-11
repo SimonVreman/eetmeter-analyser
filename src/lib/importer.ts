@@ -1,9 +1,7 @@
 import type { Consumption, Date as SplitDate, Nutrient, Product } from '../types/consumptions';
 import type {
 	Consumption as DBConsumption,
-	ConsumptionNutrient as DBConsumptionNutrient,
-	ProductNutrient as DBProductNutrient,
-	Product as DBProduct
+	ProductNutrient as DBProductNutrient
 } from '../types/schema';
 import { NutrientType, ConsumptionPeriod as DBConsumptionPeriod } from '../types/schema';
 import { Period } from '../types/consumptions';
@@ -89,7 +87,7 @@ function parseNutrient(code: number): NutrientType {
 		case 3003:
 			return NutrientType.SATURATED_FAT;
 		case 5001:
-			return NutrientType.CARBOHIDRATES;
+			return NutrientType.CARBOHYDRATES;
 		case 2002:
 			return NutrientType.PROTEIN;
 		case 6001:
