@@ -4,3 +4,7 @@
 .big-paragraph {
   @apply text-xl my-8;
 }
+
+div[role=table] {
+  margin: 0;
+}

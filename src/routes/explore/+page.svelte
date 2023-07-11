@@ -11,12 +11,12 @@
 			<Column>
 				<h1 class="mb-8">Explore data</h1>
 				<Tabs type="container">
-					<Tab label="Consumptions" />
 					<Tab label="Products" />
+					<Tab label="Consumptions" />
 					<Tab label="Nutrients" />
 					<svelte:fragment slot="content">
-						<TabContent><ConsumptionTable /></TabContent>
 						<TabContent><ProductTable /></TabContent>
+						<TabContent><ConsumptionTable /></TabContent>
 						<TabContent><NutrientsTable /></TabContent>
 					</svelte:fragment>
 				</Tabs>
