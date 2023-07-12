@@ -1,6 +1,12 @@
 import { derived, writable } from 'svelte/store';
 import { browser } from '$app/environment';
-import { getTotalMacros, getCaloricHistory, getFullDomain } from '../lib/chart-data';
+import {
+	getTotalMacros,
+	getCaloricHistory,
+	getFullDomain,
+	getMacroHistory,
+	getBrandMap
+} from '../lib/chart-data';
 import type { CachedChartData, DataPoint } from '../types/charts';
 
 function cachedStore<T>(key: string, dataLoader: () => Promise<T>): CachedChartData {
@@ -38,6 +44,7 @@ function cachedStore<T>(key: string, dataLoader: () => Promise<T>): CachedChartD
 }
 
 export const caloricHistory = cachedStore<DataPoint[]>('caloric-history', getCaloricHistory);
+export const macroHistory = cachedStore<DataPoint[]>('macro-history', getMacroHistory);
 export const domain = cachedStore<number[]>('domain', getFullDomain);
 export const totalMacros = derived(domain, (domain, set) => {
 	set([]);
@@ -46,7 +53,14 @@ export const totalMacros = derived(domain, (domain, set) => {
 	getTotalMacros(new Date(start), new Date(end)).then(set);
 });
 
-const cached: CachedChartData[] = [caloricHistory, domain];
+export const brandMap = derived(domain, (domain, set) => {
+	set([]);
+	if (!browser) return;
+	const [start, end]: [number, number] = domain;
+	getBrandMap(new Date(start), new Date(end)).then(set);
+});
+
+const cached: CachedChartData[] = [caloricHistory, domain, macroHistory];
 
 export function clearChartCache() {
 	const toRemove: string[] = [];

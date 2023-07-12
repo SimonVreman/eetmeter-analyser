@@ -5,10 +5,11 @@ export function fillEmptyDays(data: DataPoint[]): DataPoint[] {
 	const last = data[data.length - 1].date;
 	const days = Math.round((last - first) / (1000 * 60 * 60 * 24));
 	const daysFilled = data.map((d) => d.date.getTime());
+	const groups = data.filter((d) => d.date.getTime() === first.getTime()).map((d) => d.group);
 	for (let i = 0; i < days; i++) {
 		const date = new Date(first.getTime() + i * (1000 * 60 * 60 * 24));
 		if (!daysFilled.includes(date.getTime())) {
-			data.push({ group: data[0].group, date, value: null });
+			data.push(...groups.map((g) => ({ group: g, date, value: null })));
 		}
 	}
 	return data.sort((a, b) => a.date - b.date);

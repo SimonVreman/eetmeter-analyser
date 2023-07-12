@@ -3,6 +3,8 @@
 	import CaloricHistory from '../components/charts/CaloricHistory.svelte';
 	import Domain from '../components/charts/Domain.svelte';
 	import TotalMacros from '../components/charts/TotalMacros.svelte';
+	import MacroHistory from '../components/charts/MacroHistory.svelte';
+	import BrandMap from '../components/charts/BrandMap.svelte';
 </script>
 
 <Content>
@@ -21,6 +23,16 @@
 		<div class="col-span-1 -mx-8 md:mx-0">
 			<Tile>
 				<TotalMacros />
+			</Tile>
+		</div>
+		<div class="col-span-1 -mx-8 md:mx-0 xl:col-span-3">
+			<Tile>
+				<MacroHistory />
+			</Tile>
+		</div>
+		<div class="col-span-1 -mx-8 lg:col-span-2 xl:col-span-3 md:mx-0">
+			<Tile>
+				<BrandMap />
 			</Tile>
 		</div>
 	</div>

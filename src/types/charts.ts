@@ -8,6 +8,11 @@ export interface DataPoint {
 	max?: number;
 }
 
+export interface TreeMapPoint {
+	name: string;
+	children: { name: string; value: number; showLabel?: boolean }[];
+}
+
 export interface CachedChartData {
 	subscribe: (
 		this: void,
