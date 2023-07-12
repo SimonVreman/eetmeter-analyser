@@ -6,7 +6,7 @@
 	export let fileHandlers = [];
 </script>
 
-<Content class="flex">
+<Content class="md:flex">
 	<Grid class="w-full shrink">
 		<Row>
 			<Column>
@@ -17,9 +17,9 @@
 						size="lg"
 						href="https://mijn.voedingscentrum.nl/nl/dashboard/eetmeter/overzicht/"
 						>your personal Eetmeter overview</OutboundLink
-					>. Simply select the 'e-mail maandoverzicht' option, pick XML as the format and select the
-					month you want to import. Repeat this for each month you want to import here, they can all
-					be imported at once.
+					> Simply select the 'e-mail maandoverzicht' option, pick XML as the format and select the month
+					you want to import. Repeat this for each month you want to import here, they can all be imported
+					at once.
 				</p>
 				<FileUpload bind:fileHandlers />
 			</Column>

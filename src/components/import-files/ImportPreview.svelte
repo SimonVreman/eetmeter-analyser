@@ -73,7 +73,7 @@
 				});
 				return goto('/');
 			})
-			.catch((e) => {
+			.catch(() => {
 				notifications.send({
 					title: 'Import failed',
 					subtitle: 'Something went wrong while importing your files.',
@@ -140,10 +140,8 @@
 			</div>
 		{:else}
 			<div class="flex flex-col justify-center h-full">
-				<h3 class="mb-2">Upload files to see a summary</h3>
-				<p class="">
-					After you add some files, we will show a preview of what you have uploaded here.
-				</p>
+				<h3 class="mb-2 mt-6">Upload files to see a summary</h3>
+				<p>After you add some files, we will show a preview of what you have uploaded here.</p>
 			</div>
 		{/if}
 	</div>

@@ -8,7 +8,8 @@
 		donut: {
 			center: {
 				label: 'Energy'
-			}
+			},
+			alignment: 'center'
 		},
 		data: {
 			loading: true

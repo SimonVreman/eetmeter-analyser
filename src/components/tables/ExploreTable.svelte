@@ -28,7 +28,7 @@
 	let sortKey = ':id';
 	let sortDirection = 'ascending';
 
-	function showError(e) {
+	function showError() {
 		notifications.send({
 			type: MessageType.ERROR,
 			title: 'Failed to load data',
@@ -60,24 +60,32 @@
 	}
 </script>
 
-<div class="-mx-4">
+<div class="-mx-4 overflow-x-auto">
 	{#if !loading && (rowCount || rowCount === 0) && rows}
 		{#if rows.length > 0}
-			<DataTable
-				sortable
-				{expandable}
-				{title}
-				{description}
-				{headers}
-				{rows}
-				bind:sortKey
-				bind:sortDirection
-			>
-				<svelte:fragment slot="expanded-row" let:row>
-					<slot {row} />
-				</svelte:fragment>
-			</DataTable>
-			<Pagination bind:pageSize bind:page totalItems={rowCount} pageSizeInputDisabled />
+			<div class="pb-2" style="min-width: 550px;">
+				<DataTable
+					sortable
+					{expandable}
+					{title}
+					{description}
+					{headers}
+					{rows}
+					bind:sortKey
+					bind:sortDirection
+				>
+					<svelte:fragment slot="expanded-row" let:row>
+						<slot {row} />
+					</svelte:fragment>
+				</DataTable>
+				<Pagination
+					class="overflow-hidden w-full"
+					bind:pageSize
+					bind:page
+					totalItems={rowCount}
+					pageSizeInputDisabled
+				/>
+			</div>
 		{:else}
 			<Tile>
 				<div class="max-w-lg my-8">
@@ -94,7 +102,13 @@
 			</Tile>
 		{/if}
 	{:else}
-		<DataTableSkeleton showToolbar={false} headers={headers.map((h) => h.value)} rows={pageSize} />
-		<PaginationSkeleton />
+		<div class="pb-2" style="min-width: 550px;">
+			<DataTableSkeleton
+				showToolbar={false}
+				headers={headers.map((h) => h.value)}
+				rows={pageSize}
+			/>
+			<PaginationSkeleton />
+		</div>
 	{/if}
 </div>

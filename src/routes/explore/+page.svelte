@@ -10,16 +10,18 @@
 		<Row>
 			<Column>
 				<h1 class="mb-8">Explore data</h1>
-				<Tabs type="container">
-					<Tab label="Products" />
-					<Tab label="Consumptions" />
-					<Tab label="Nutrients" />
-					<svelte:fragment slot="content">
-						<TabContent><ProductTable /></TabContent>
-						<TabContent><ConsumptionTable /></TabContent>
-						<TabContent><NutrientsTable /></TabContent>
-					</svelte:fragment>
-				</Tabs>
+				<div class="-mx-12 md:mx-0">
+					<Tabs type="container">
+						<Tab label="Products" />
+						<Tab label="Consumptions" />
+						<Tab label="Nutrients" />
+						<svelte:fragment slot="content">
+							<TabContent><ProductTable /></TabContent>
+							<TabContent><ConsumptionTable /></TabContent>
+							<TabContent><NutrientsTable /></TabContent>
+						</svelte:fragment>
+					</Tabs>
+				</div>
 			</Column>
 		</Row>
 	</Grid>

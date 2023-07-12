@@ -3,9 +3,11 @@
 </script>
 
 <!-- spacer -->
-<div class="max-w-lg w-full -mr-8 shrink-0" />
+<div class="hidden md:block max-w-sm lg:max-w-lg w-full -mr-8 shrink-0" />
 
-<Tile class="max-w-lg w-full flex flex-col fixed top-12 right-0" style="height: calc(100vh - 3rem)">
+<Tile
+	class="-mx-8 -mb-8 mt-4 min-w-fit md:min-w-0 md:w-full md:m-0 md:max-w-sm lg:max-w-lg flex flex-col md:fixed md:top-12 md:right-0 md:h-[calc(100vh-3rem)]"
+>
 	<div class="grow-0 header text-xl font-semibold">
 		<slot name="header" />
 	</div>
