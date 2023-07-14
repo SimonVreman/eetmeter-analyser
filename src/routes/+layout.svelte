@@ -55,6 +55,7 @@
 </script>
 
 <Theme bind:theme={darkMode} persist />
+
 {#if $newUser}
 	<IntroModal />
 {/if}
@@ -64,6 +65,7 @@
 {#if loading}
 	<Loading />
 {/if}
+
 <Header company="Eetmeter" platformName="Analyser" bind:isSideNavOpen>
 	<svelte:fragment slot="skip-to-content">
 		<SkipToContent />
