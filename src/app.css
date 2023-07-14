@@ -13,3 +13,8 @@ div[role=table] {
 :root {
   --cds-layer-01: var(--cds-ui-01);
 }
+
+/* Fix for content shifting out of viewport */
+.bx--side-nav.bx--side-nav--expanded~.bx--content {
+  margin-left: 0;
+}
