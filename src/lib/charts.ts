@@ -1,6 +1,7 @@
 import type { DataPoint } from '../types/charts';
 
 export function fillEmptyDays(data: DataPoint[]): DataPoint[] {
+	if (data.length === 0) return [];
 	const first = data[0].date;
 	const last = data[data.length - 1].date;
 	const days = Math.round((last - first) / (1000 * 60 * 60 * 24));
@@ -16,6 +17,7 @@ export function fillEmptyDays(data: DataPoint[]): DataPoint[] {
 }
 
 export function calculateCorrectedAverage(data: DataPoint[], days = 5): DataPoint[] {
+	if (data.length === 0) return [];
 	const result: DataPoint[] = [];
 	const group = data[0].group + ' (corrected average)';
 	for (let i = data.length; i >= days; i--) {

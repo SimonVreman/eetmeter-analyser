@@ -14,17 +14,37 @@
 		Theme,
 		HeaderAction,
 		HeaderPanelLinks,
-		HeaderPanelDivider
+		HeaderPanelDivider,
+		Button,
+		Loading
 	} from 'carbon-components-svelte';
 	import { Dashboard, DataTable, SettingsAdjust, Upload } from 'carbon-icons-svelte';
 	import { page } from '$app/stores';
 	import Notifications from '../components/notifications/Notifications.svelte';
 	import { theme } from '../stores/theme';
+	import { demo, newUser } from '../stores/demo';
+	import DemoBanner from '../components/intro/DemoBanner.svelte';
+	import IntroModal from '../components/intro/IntroModal.svelte';
+	import { enterDemoMode, exitDemoMode } from '$lib/demo';
+	import { clearChartCache } from '../stores/charts';
 
 	let isSideNavOpen = false;
 	let isSettingsOpen = false;
 	let darkMode = 'g90';
 	let segment;
+	let loading = false;
+
+	function toggleDemo() {
+		loading = true;
+		($demo ? exitDemoMode : enterDemoMode)()
+			.then(() => {
+				clearChartCache();
+				$demo = !$demo;
+			})
+			.finally(() => {
+				loading = false;
+			});
+	}
 
 	$: {
 		const split = $page.url.pathname.split('/');
@@ -35,6 +55,15 @@
 </script>
 
 <Theme bind:theme={darkMode} persist />
+{#if $newUser}
+	<IntroModal />
+{/if}
+{#if $demo}
+	<DemoBanner />
+{/if}
+{#if loading}
+	<Loading />
+{/if}
 <Header company="Eetmeter" platformName="Analyser" bind:isSideNavOpen>
 	<svelte:fragment slot="skip-to-content">
 		<SkipToContent />
@@ -58,6 +87,9 @@
 						>{darkMode === 'g90' ? 'Disable dark mode' : 'Enable dark mode'}</span
 					>
 				</div>
+				<Button class="absolute w-full bottom-0" on:click={toggleDemo} disabled={loading}
+					>{$demo ? 'Leave demo' : 'Enter demo'}</Button
+				>
 			</HeaderPanelLinks>
 		</HeaderAction>
 	</HeaderUtilities>

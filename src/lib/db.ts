@@ -8,8 +8,8 @@ export class LocalDatabase extends Dexie {
 	products!: Table<Product>;
 	productNutrients!: Table<ProductNutrient>;
 
-	constructor() {
-		super('eetmeterdb');
+	constructor(name = 'eetmeterdb') {
+		super(name);
 		this.version(1).stores({
 			nutrients: '++id, name, unit',
 			consumptions: '++id, date, period, productId, grams',

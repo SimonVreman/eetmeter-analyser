@@ -3,7 +3,6 @@
 		Button,
 		DataTable,
 		DataTableSkeleton,
-		Link,
 		Pagination,
 		PaginationSkeleton,
 		Tile
@@ -95,9 +94,6 @@
 						exploring, head to the import page and add your data, or go to demo mode.
 					</p>
 					<Button href="/import">Import data</Button>
-					<div class="mt-4">
-						<Link>Open demo mode</Link>
-					</div>
 				</div>
 			</Tile>
 		{/if}
