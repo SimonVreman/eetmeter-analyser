@@ -5,7 +5,10 @@
 	import TotalMacros from '../components/charts/TotalMacros.svelte';
 	import MacroHistory from '../components/charts/MacroHistory.svelte';
 	import BrandMap from '../components/charts/BrandMap.svelte';
+	import MetaHead from '../components/head/MetaHead.svelte';
 </script>
+
+<MetaHead title="Dashboard" description="Data visualisations of the imported data." />
 
 <Content>
 	<div class="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">

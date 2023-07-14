@@ -3,7 +3,10 @@
 	import ConsumptionTable from '../../components/tables/ConsumptionTable.svelte';
 	import NutrientsTable from '../../components/tables/NutrientsTable.svelte';
 	import ProductTable from '../../components/tables/ProductTable.svelte';
+	import MetaHead from '../../components/head/MetaHead.svelte';
 </script>
+
+<MetaHead title="Explore" description="Explore all your imported data." />
 
 <Content class="flex">
 	<Grid class="w-full shrink">

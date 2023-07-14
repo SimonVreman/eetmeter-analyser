@@ -2,9 +2,12 @@
 	import { Column, Content, Grid, OutboundLink, Row } from 'carbon-components-svelte';
 	import FileUpload from '../../components/import-files/FileUpload.svelte';
 	import ImportPreview from '../../components/import-files/ImportPreview.svelte';
+	import MetaHead from '../../components/head/MetaHead.svelte';
 
 	export let fileHandlers = [];
 </script>
+
+<MetaHead title="Import" description="Import your own data." />
 
 <Content class="md:flex">
 	<Grid class="w-full shrink">
