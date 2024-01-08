@@ -7,7 +7,7 @@
 	const options = {
 		height: '600px',
 		theme: $theme,
-		title: 'Consumed products by brand',
+		title: 'Consumed grams per product by brand',
 		legend: { enabled: false }
 	};
 

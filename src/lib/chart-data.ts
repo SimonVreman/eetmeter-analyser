@@ -82,29 +82,29 @@ export async function getTotalMacros(start: Date, end: Date): Promise<DataPoint[
 
 export async function getBrandMap(start: Date, end: Date): Promise<TreeMapPoint[]> {
 	const counts: Map<string, Map<string, { name: string; value: number }>> = new Map();
-	const productCounts: Map<number, number> = new Map();
+	const productGrams: Map<number, number> = new Map();
 	await db.consumptions
 		.where('date')
 		.between(start, end)
 		.each((c) => {
-			productCounts.has(c.productId)
-				? productCounts.set(c.productId, productCounts.get(c.productId) + 1)
-				: productCounts.set(c.productId, 1);
+			productGrams.has(c.productId)
+				? productGrams.set(c.productId, productGrams.get(c.productId) + c.grams)
+				: productGrams.set(c.productId, c.grams);
 		});
 	const totalApproximation = await db.consumptions.count();
 	const labelThreshold = totalApproximation * 0.001;
 	return db.products
 		.where('id')
-		.anyOf([...productCounts.keys()])
+		.anyOf([...productGrams.keys()])
 		.each((p) => {
-			if (!p.brand) return;
-			if (!counts.has(p.brand)) counts.set(p.brand, new Map());
-			const brandMap = counts.get(p.brand);
+			const brand = p.brand ?? 'Algemeen';
+			if (!counts.has(brand)) counts.set(brand, new Map());
+			const brandMap = counts.get(brand);
 			const productKey = p.nevo ? `${p.nevo}` : p.guid;
 			if (!brandMap.has(productKey)) {
-				brandMap.set(productKey, { name: p.name, value: productCounts.get(p.id ?? -1) ?? 0 });
+				brandMap.set(productKey, { name: p.name, value: productGrams.get(p.id ?? -1) ?? 0 });
 			} else {
-				brandMap.get(productKey).value += productCounts.get(p.id ?? -1) ?? 0;
+				brandMap.get(productKey).value += productGrams.get(p.id ?? -1) ?? 0;
 			}
 		})
 		.then(() =>
