@@ -1,7 +1,7 @@
 # Eetmeter analyser 🍎
 A tool to gather insights from Eetmeter data not available through the official app and website built in SvelteKit.
 Your data does not leave your browser, the tool relies on IndexedDB for data storage and analysis. Though this also
-means I don't keep a backup for your ;). You can try it out at [https://eetmeter.simonvreman.nl/](https://eetmeter.simonvreman.nl/).
+means I don't keep a backup for you ;). You can try it out at [https://eetmeter.simonvreman.nl/](https://eetmeter.simonvreman.nl/).
 
 ![preview](img/preview.png)
 
